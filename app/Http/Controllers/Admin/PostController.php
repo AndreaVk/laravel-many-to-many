@@ -55,23 +55,15 @@ class PostController extends Controller
         $data = $request->all();
 
         $newPost = new Post();
-        $newPost->title = $data['title'];
-        $newPost->content= $data['content'];
-        $newPost->category_id = $data['category_id'];
+        $newPost->fill($data);
 
         if (isset($data['published'])) {
             $newPost->published = true;
         }
 
-        $slug= Str::of($newPost->title)->slug('-');
-        $count = 1;
-
-        while(Post::where('slug', $slug)->first()) {
-            $slug = Str::of($newPost->title)->slug('-') . "-($count)";
-            $count++;
-        }
         
-        $newPost->slug = $slug;
+        
+        $newPost->slug = $this->getSlug($newPost->title);
         
         if(isset($data['image'])){
             $path_image = Storage::put('uploads', $data['image']);
@@ -129,14 +121,9 @@ class PostController extends Controller
             $post->title = $data['title'];
 
             $slug = Str::of($post->title)->slug('-');
-            $count = 1;
-
-            while (Post::where('slug', $slug)->first()) {
-                $slug = Str::of($post->title)->slug('-') . "-($count)";
-                $count++;
+            if($slug != $post->slug) {
+                $post->slug = $this->getSlug($post->title);
             }
-
-            $post->slug = $slug;
         }
         $post->content = $data['content'];
         $post->published = isset($data['published']);
@@ -168,5 +155,18 @@ class PostController extends Controller
         }
         $post->delete();
         return redirect()->route("posts.index");
+    }
+
+    private function getSlug($title)
+    {
+        $slug= Str::of($title)->slug('-');
+        $count = 1;
+
+        while(Post::where("slug", $slug)->first()) {
+            $slug = Str::of($title)->slug('-') . "-($count)";
+            $count++;
+        }
+
+        return $slug;
     }
 }
