@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Post;
+use App\Tag;
 use App\Category;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,8 +32,8 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
-
-        return view('admin.posts.create', compact('categories'));
+        $tags = Tag::all();
+        return view('admin.posts.create', compact('categories', 'tags'));
     }
 
     /**
@@ -49,7 +50,8 @@ class PostController extends Controller
             'content'=> 'required',
             'published'=> 'sometimes|accepted',
             'category_id'=>'nullable|exists:categories,id',
-            'image'=>'nullable|mimes:jpeg,bmp,png|max:2048'
+            'image'=>'nullable|mimes:jpeg,bmp,png|max:2048',
+            'posts'=>'nullable|exist:tags,id'
         ]);
 
         $data = $request->all();
@@ -112,7 +114,8 @@ class PostController extends Controller
             'content'=> 'required',
             'published'=> 'sometimes|accepted',
             'category_id'=>'nullable|exists:categories,id',
-            'image'=>'nullable|mimes:jpeg,bmp,png|max:2048'
+            'image'=>'nullable|mimes:jpeg,bmp,png|max:2048',
+            'posts'=>'nullable|exist:tags,id'
         ]);
         
         $data = $request->all();

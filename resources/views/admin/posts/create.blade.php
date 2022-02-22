@@ -39,10 +39,21 @@
                             <div class="alert alert-danger mt-3">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="published" >
-                            <label class="form-check-label" for="published">Pubblica</label>
-                        </div>
+                        <div class="form-group">
+                            <p>Tags</p>
+                            @foreach ($tags as $tag)
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input" id="{{$tag->slug}}" name="tags[]" value="{{$tag->id}}">
+                                <label class="form-check-label" for="{{$tag->slug}}">{{$tag->name}}</label>
+                            </div>
+                            @endforeach
+                        <div class="form-group form-check mt-2">
+                                <input type="checkbox" class="form-check-input" id="published" name="published">
+                                <label class="form-check-label" for="published">Pubblica</label>
+                                @error ('published')
+                                <div class="alert alert-danger mt-2">{{ $message }}</div>
+                                @enderror
+                        </div>    
                         <div class="form-group">
                             
                             <img id="uploadPreview" width="100" src="https://via.placeholder.com/300x200">
