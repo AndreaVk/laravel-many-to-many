@@ -24,6 +24,14 @@
                             Categoria: {{$post->category->name}}
                         </div>
                     @endif
+                    @if (count($post->tags) > 0)
+                    <div class="mb-3">
+                        <p>Tags</p>
+                        @foreach ($post->tags as $tag)
+                        <span class="badge badge-primary">{{$tag->name}}</span>
+                        @endforeach
+                    </div>
+                    @endif
                     <a href="{{route('posts.index', $post->id)}}"><button type="button" class="btn btn-primary">Torna ai post</button></a>
                 </div>
             </div>
